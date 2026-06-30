@@ -451,14 +451,7 @@
             <span class="payment-code">{{ activeTrace.orderCode }}</span>
             <h3>{{ activeTrace.currentStatus }}</h3>
           </div>
-          <div style="display: flex; gap: 0.5rem; align-items: center;">
-            <strong>Bs {{ activeTrace.amount | number }}</strong>
-            <button (click)="openTransactionDetail(activeTrace)" class="detail-btn" title="Ver detalles completos P2P">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-              </svg>
-            </button>
-          </div>
+          <strong>Bs {{ activeTrace.amount | number }}</strong>
         </div>
 
         <div class="payment-meta">
@@ -537,7 +530,7 @@
             <div class="step-details">
               <h4>Pago y Liquidacion</h4>
               <p><strong>Orden:</strong> {{ selectedPaymentTrace.orderCode }}</p>
-              <p><strong>Comprador:</strong> {{ selectedPaymentTrace.buyer }}</p>
+              <p><strong>Comprador:</strong> {{ selectedPaymentTrace.buyerName }}</p>
               <p><strong>Monto:</strong> Bs {{ selectedPaymentTrace.amount | number }}</p>
               <span class="logistic-tag">{{ selectedPaymentTrace.currentStatus }}</span>
             </div>
@@ -583,12 +576,5 @@
       </div>
     </div>
   </div>
-
-  <!-- Modal de Detalles P2P -->
-  <app-transaction-detail-modal 
-    [transaction]="selectedTransactionDetail"
-    [isOpen]="isDetailModalOpen"
-    (closeModal)="closeTransactionDetail()">
-  </app-transaction-detail-modal>
 
 </div>
