@@ -1,0 +1,579 @@
+<div class="home-page">
+  <!-- Toast Notification System -->
+  <div class="toast-notification" *ngIf="notificationMessage" [class]="notificationType">
+    <div class="toast-icon">
+      <svg *ngIf="notificationType === 'success'" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+      </svg>
+      <svg *ngIf="notificationType === 'info'" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+      </svg>
+      <svg *ngIf="notificationType === 'warning'" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
+      </svg>
+    </div>
+    <span class="toast-text">{{ notificationMessage }}</span>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-container container">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        <span class="badge-text">Logística Agrícola Comunitaria</span>
+      </div>
+      <h1 class="hero-title">
+        Conexión Directa del <br>
+        <span class="text-gradient">Campo a tu Mesa</span>
+      </h1>
+      <p class="hero-subtitle">
+        Una plataforma comunitaria para que productores locales publiquen sus cosechas diarias y los consumidores accedan a productos frescos con trazabilidad garantizada.
+      </p>
+      <div class="hero-actions">
+        <a href="#catalog" class="btn-hero-primary">
+          Ver Productos
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+            <path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"/>
+          </svg>
+        </a>
+        <a href="#points" class="btn-hero-outline">Ver entregas</a>
+      </div>
+    </div>
+    <div class="hero-bg-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+    </div>
+  </section>
+
+  <!-- HU-07: Dashboard Resumen -->
+  <section id="stats" class="stats-section container">
+    <div class="stats-grid">
+      <div class="stat-card glass hover-lift">
+        <div class="stat-icon-wrapper">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats.totalProducts }}</span>
+          <span class="stat-label">Productos Activos</span>
+        </div>
+      </div>
+
+      <div class="stat-card glass hover-lift">
+        <div class="stat-icon-wrapper">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+          </svg>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats.totalOrders }}</span>
+          <span class="stat-label">Pedidos Realizados</span>
+        </div>
+      </div>
+
+      <div class="stat-card glass hover-lift">
+        <div class="stat-icon-wrapper">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats.totalDeliveryPoints }}</span>
+          <span class="stat-label">Puntos de Entrega</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="producer-workspace" class="producer-workspace container" *ngIf="isProducer">
+    <div class="section-header">
+      <h2 class="section-title">Panel del productor</h2>
+      <p class="section-desc">Administra tus productos, registra nuevas cosechas y revisa reservas desde una sola vista.</p>
+    </div>
+
+    <div class="producer-dashboard-grid">
+      <div id="producer-products" class="producer-panel">
+        <div class="producer-panel-head">
+          <div>
+            <span>Inventario</span>
+            <h3>Mis productos</h3>
+          </div>
+          <strong>{{ producerProducts.length }}</strong>
+        </div>
+
+        <div class="producer-list">
+          <div class="producer-product-card" *ngFor="let product of producerProducts">
+            <img *ngIf="product.imageUrl" [src]="product.imageUrl" [alt]="product.name">
+            <div>
+              <span>{{ product.batchCode || product.qrCodeSimulated }}</span>
+              <h4>{{ product.name }}</h4>
+              <p>{{ product.category }} · {{ product.origin }}</p>
+              <strong>Bs {{ product.price | number }} / {{ product.unit }} · Stock {{ product.stock }}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="reservations" class="producer-panel">
+        <div class="producer-panel-head">
+          <div>
+            <span>Pedidos</span>
+            <h3>Reservas</h3>
+          </div>
+          <strong>{{ visibleReservations.length }}</strong>
+        </div>
+
+        <div class="producer-list">
+          <div class="producer-reservation-card" *ngFor="let trace of visibleReservations">
+            <span class="payment-code">{{ trace.orderCode }}</span>
+            <h4>{{ trace.product }}</h4>
+            <p>{{ trace.buyer }} · {{ trace.method }}</p>
+            <div>
+              <strong>Bs {{ trace.amount | number }}</strong>
+              <span class="role-pill">{{ trace.currentStatus }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <form id="offer" class="producer-panel producer-form" #producerForm="ngForm" (ngSubmit)="registerOffer(producerForm)">
+        <div class="producer-panel-head">
+          <div>
+            <span>Nuevo producto</span>
+            <h3>Registrar producto</h3>
+          </div>
+        </div>
+
+        <div class="producer-form-grid">
+          <label>
+            Producto
+            <input type="text" name="quickName" required [(ngModel)]="newProduct.name" placeholder="Ej. Tomate cherry">
+          </label>
+
+          <label>
+            Categoria
+            <select name="quickCategory" required [(ngModel)]="newProduct.category">
+              <option value="Verduras">Verduras</option>
+              <option value="Frutas">Frutas</option>
+              <option value="Tubérculos">Tubérculos</option>
+              <option value="Hortalizas">Hortalizas</option>
+            </select>
+          </label>
+
+          <label>
+            Precio
+            <input type="number" name="quickPrice" required min="1" [(ngModel)]="newProduct.price">
+          </label>
+
+          <label>
+            Stock
+            <input type="number" name="quickStock" required min="1" [(ngModel)]="newProduct.stock">
+          </label>
+
+          <label>
+            Unidad
+            <select name="quickUnit" required [(ngModel)]="newProduct.unit">
+              <option value="Kg">Kg</option>
+              <option value="Unidad">Unidad</option>
+              <option value="Atado">Atado</option>
+              <option value="Bandeja">Bandeja</option>
+            </select>
+          </label>
+
+          <label>
+            Origen
+            <input type="text" name="quickOrigin" required [(ngModel)]="newProduct.origin" placeholder="Ej. Sacaba">
+          </label>
+
+          <label>
+            Fecha de cosecha
+            <input type="date" name="quickHarvest" required [(ngModel)]="newProduct.harvestDate">
+          </label>
+
+          <label>
+            Calidad
+            <select name="quickQuality" [(ngModel)]="newProduct.qualityStatus">
+              <option value="Premium">Premium</option>
+              <option value="Fresco">Fresco</option>
+              <option value="Excelente">Excelente</option>
+              <option value="Maduro">Maduro</option>
+            </select>
+          </label>
+        </div>
+
+        <button type="submit" class="producer-submit" [disabled]="producerForm.invalid">
+          Registrar producto
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Main Marketplace Section -->
+  <section id="catalog" class="catalog-section container">
+    <div class="section-header">
+      <h2 class="section-title">Cosecha de Hoy</h2>
+      <p class="section-desc">Adquiere productos 100% frescos directamente de los agricultores y apoya al comercio local.</p>
+    </div>
+
+    <!-- HU-02: Filtros por Categoría -->
+    <div class="categories-filter">
+      <button 
+        *ngFor="let category of categories"
+        [class.active]="selectedCategory === category" 
+        (click)="filterByCategory(category)" 
+        class="category-btn">
+        {{ category }}
+      </button>
+    </div>
+
+    <div class="loading-products" *ngIf="isLoadingProducts">
+      Preparando datos mock de productos...
+    </div>
+
+    <!-- Grid Container -->
+    <div class="catalog-grid">
+      <!-- HU-01: Grid de Productos -->
+      <div class="products-list-column">
+        <div class="products-grid">
+          <div *ngFor="let prod of filteredProducts">
+            <app-card [title]="prod.name" [variant]="prod.qualityStatus === 'Premium' ? 'premium' : 'default'">
+              <!-- Crop type tag -->
+              <span card-icon class="product-badge" [class]="prod.cropType.toLowerCase()">
+                {{ prod.cropType }}
+              </span>
+
+              <div class="product-card-body">
+                <img
+                  *ngIf="prod.imageUrl"
+                  class="product-image"
+                  [src]="prod.imageUrl"
+                  [alt]="prod.name">
+
+                <p class="product-description" *ngIf="prod.description">
+                  {{ prod.description }}
+                </p>
+
+                <div class="product-price-info">
+                  <span class="price">Bs {{ prod.price | number }}</span>
+                  <span class="unit">/ {{ prod.unit }}</span>
+                </div>
+
+                <div class="product-details">
+                  <div class="detail-row">
+                    <span class="detail-icon">👤</span>
+                    <span>Productor: <strong>{{ prod.producer }}</strong></span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-icon">📍</span>
+                    <span>Origen: {{ prod.origin }}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-icon">📅</span>
+                    <span>Cosechado: {{ prod.harvestDate }}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-icon">📦</span>
+                    <span>Stock disponible: 
+                      <strong [class.low-stock]="prod.stock < 15">{{ prod.stock }} {{ prod.unit }}</strong>
+                    </span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-icon">✨</span>
+                    <span>Calidad: <span class="quality-tag">{{ prod.qualityStatus }}</span></span>
+                  </div>
+                </div>
+
+                <div class="product-actions">
+                  <button 
+                    class="btn-action-primary" 
+                    (click)="addToCart(prod)" 
+                    [disabled]="prod.stock <= 0">
+                    {{ prod.stock <= 0 ? 'Sin Stock' : 'Agregar al Pedido' }}
+                  </button>
+                  <button 
+                    class="btn-action-secondary" 
+                    (click)="showTraceability(prod)">
+                    Trazabilidad
+                  </button>
+                </div>
+              </div>
+            </app-card>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-products" *ngIf="filteredProducts.length === 0">
+          <p>No hay productos disponibles en la categoría <strong>{{ selectedCategory }}</strong> hoy.</p>
+        </div>
+      </div>
+
+      <!-- Checkout and Delivery Point column -->
+      <div class="checkout-column">
+        <!-- HU-03: Resumen del Pedido Simulado -->
+        <div class="checkout-card glass">
+          <div class="checkout-header">
+            <h3>Reserva de productos</h3>
+            <button class="clear-btn" *ngIf="cart.length > 0" (click)="clearCart()">Limpiar todo</button>
+          </div>
+
+          <div class="cart-items" *ngIf="cart.length > 0">
+            <div class="cart-item" *ngFor="let item of cart">
+              <div class="cart-item-info">
+                <span class="cart-item-name">{{ item.product.name }}</span>
+                <span class="cart-item-price">Bs {{ item.product.price | number }} / {{ item.product.unit }}</span>
+              </div>
+              <div class="cart-item-controls">
+                <button class="qty-btn" (click)="updateQuantity(item, -1)">&minus;</button>
+                <span class="qty-val">{{ item.quantity }}</span>
+                <button class="qty-btn" (click)="updateQuantity(item, 1)">&plus;</button>
+                <button class="remove-btn" (click)="removeFromCart(item)">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+                    <path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.02.84 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.02a.75.75 0 00.23-1.481A48.694 48.694 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM8 4c.002-.136.012-.27.03-.4a1.25 1.25 0 011.22-1.1h2.52a1.25 1.25 0 011.22 1.1c.018.13.028.264.03.4H8zM6 8a.75.75 0 01.75.75v6a.75.75 0 01-1.5 0v-6A.75.75 0 016 8zm4.75.75a.75.75 0 00-1.5 0v6a.75.75 0 001.5 0v-6z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Subtotal / Delivery Spot -->
+            <div class="cart-summary">
+              <label class="checkout-field">
+                Nombre para la reserva
+                <input type="text" name="buyerName" placeholder="Ej. Carlos Mercado" [(ngModel)]="reservationData.buyerName">
+              </label>
+
+              <label class="checkout-field">
+                Telefono
+                <input type="text" name="buyerPhone" placeholder="Ej. 70000000" [(ngModel)]="reservationData.phone">
+              </label>
+
+              <label class="checkout-field">
+                Fecha de retiro
+                <input type="date" name="pickupDate" [(ngModel)]="reservationData.pickupDate">
+              </label>
+
+              <label class="checkout-field">
+                Forma de pago
+                <select name="paymentMethod" [(ngModel)]="reservationData.paymentMethod">
+                  <option value="qr">Pagar ahora con QR de la app</option>
+                  <option value="point">Pagar en el punto de entrega</option>
+                </select>
+              </label>
+
+              <div class="qr-payment-box" *ngIf="reservationData.paymentMethod === 'qr'">
+                <div class="mini-qr">QR</div>
+                <span>QR mock generado para completar el pago desde la app.</span>
+              </div>
+
+              <div class="summary-row">
+                <span>Items totales:</span>
+                <strong>{{ getCartItemsCount() }}</strong>
+              </div>
+              <div class="summary-row" *ngIf="selectedDeliveryPoint">
+                <span>Punto de entrega:</span>
+                <strong class="selected-point-tag">{{ selectedDeliveryPoint.name }}</strong>
+              </div>
+              <div class="summary-total">
+                <span>Total Estimado:</span>
+                <span class="total-value">Bs {{ getCartTotal() | number }}</span>
+              </div>
+            </div>
+
+            <button class="checkout-btn glow-on-hover" (click)="confirmSimulatedOrder()">
+              Reservar productos
+            </button>
+          </div>
+
+          <div class="cart-empty" *ngIf="cart.length === 0">
+            <span class="empty-icon">🛒</span>
+            <p>Tu reserva está vacía. Selecciona productos del catálogo.</p>
+          </div>
+        </div>
+
+        <!-- HU-04: Puntos Estratégicos de Entrega -->
+        <div id="points" class="delivery-points-card glass">
+          <h3>Puntos Estratégicos de Entrega</h3>
+          <p class="points-desc">Selecciona dónde deseas recoger tus productos agrícolas en Cochabamba.</p>
+
+          <div class="map-wrapper">
+            <iframe
+              title="Mapa de puntos de entrega en Cochabamba"
+              src="https://www.openstreetmap.org/export/embed.html?bbox=-66.1900%2C-17.4200%2C-66.1250%2C-17.3650&layer=mapnik&marker=-17.3895%2C-66.1568"
+              loading="lazy">
+            </iframe>
+          </div>
+
+          <div class="points-list">
+            <div 
+              class="point-item hover-lift" 
+              *ngFor="let pt of deliveryPoints" 
+              [class.selected]="selectedDeliveryPoint?.id === pt.id" 
+              (click)="selectDeliveryPoint(pt)">
+              <div class="point-header">
+                <span class="point-name">{{ pt.name }}</span>
+                <span class="point-badge" [class]="pt.status.toLowerCase()">{{ pt.status }}</span>
+              </div>
+              <p class="point-address">📍 {{ pt.address }}</p>
+              <p class="point-schedule">🕒 {{ pt.schedule }}</p>
+              <p class="point-coords" *ngIf="pt.lat && pt.lng">{{ pt.lat }}, {{ pt.lng }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="payments" class="payments-section container" *ngIf="currentUser">
+    <div class="section-header">
+      <h2 class="section-title">Pagos</h2>
+      <p class="section-desc">Flujo completo de pago por QR, pago en punto, entrega y liquidacion al productor.</p>
+    </div>
+
+    <div class="payments-layout">
+      <div class="payment-list">
+        <button
+          type="button"
+          class="payment-card"
+          *ngFor="let trace of visiblePaymentTraces"
+          [class.selected]="selectedPaymentTrace?.id === trace.id"
+          (click)="selectedPaymentTrace = trace">
+          <span class="payment-code">{{ trace.orderCode }}</span>
+          <strong>{{ trace.product }}</strong>
+          <span>{{ trace.buyer }} -> {{ trace.producer }}</span>
+          <small>{{ trace.method }} · Bs {{ trace.amount | number }}</small>
+        </button>
+      </div>
+
+      <div class="payment-detail glass" *ngIf="(selectedPaymentTrace || visiblePaymentTraces[0]) as activeTrace">
+        <div class="payment-detail-head">
+          <div>
+            <span class="payment-code">{{ activeTrace.orderCode }}</span>
+            <h3>{{ activeTrace.currentStatus }}</h3>
+          </div>
+          <strong>Bs {{ activeTrace.amount | number }}</strong>
+        </div>
+
+        <div class="payment-meta">
+          <span>Comprador: <strong>{{ activeTrace.buyer }}</strong></span>
+          <span>Productor: <strong>{{ activeTrace.producer }}</strong></span>
+          <span>Metodo: <strong>{{ activeTrace.method }}</strong></span>
+        </div>
+
+        <div class="payment-steps">
+          <div class="payment-step" *ngFor="let step of activeTrace.steps" [ngClass]="step.status.toLowerCase().replace(' ', '-')">
+            <div class="payment-step-marker"></div>
+            <div>
+              <div class="step-title-row">
+                <h4>{{ step.title }}</h4>
+                <span>{{ step.status }}</span>
+              </div>
+              <p>{{ step.description }}</p>
+              <small>{{ step.date }} · {{ step.actor }} <ng-container *ngIf="step.amount">· Bs {{ step.amount | number }}</ng-container></small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HU-05: Modal de Consulta de Trazabilidad -->
+  <div class="modal-backdrop" *ngIf="selectedProductForTraceability">
+    <div class="modal-container glass">
+      <div class="modal-header">
+        <h2>Trazabilidad del Producto</h2>
+        <button class="close-modal-btn" (click)="closeTraceability()">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <h3 class="product-title">{{ selectedProductForTraceability.name }}</h3>
+        <div class="trace-summary">
+          <span>Lote: <strong>{{ selectedProductForTraceability.batchCode || 'Lote mock' }}</strong></span>
+          <span>QR: <strong>{{ selectedProductForTraceability.qrCodeSimulated }}</strong></span>
+        </div>
+        
+        <div class="trazabilidad-flow">
+          <!-- Paso 1: Productor -->
+          <div class="flow-step">
+            <div class="step-icon">👨‍🌾</div>
+            <div class="step-details">
+              <h4>Origen y Productor</h4>
+              <p><strong>Productor:</strong> {{ selectedProductForTraceability.producer }}</p>
+              <p><strong>Zona de cultivo:</strong> {{ selectedProductForTraceability.origin }}</p>
+              <p><strong>Tipo de cultivo:</strong> {{ selectedProductForTraceability.cropType }}</p>
+              <p><strong>Lote:</strong> {{ selectedProductForTraceability.batchCode || 'Asignado por el productor' }}</p>
+            </div>
+          </div>
+
+          <!-- Paso 2: Cosecha -->
+          <div class="flow-step">
+            <div class="step-icon">🚜</div>
+            <div class="step-details">
+              <h4>Cosecha y Calidad</h4>
+              <p><strong>Fecha de cosecha:</strong> {{ selectedProductForTraceability.harvestDate }}</p>
+              <p><strong>Estado de calidad:</strong> {{ selectedProductForTraceability.qualityStatus }}</p>
+            </div>
+          </div>
+
+          <!-- Paso 3: Logística -->
+          <div class="flow-step active">
+            <div class="step-icon">🚛</div>
+            <div class="step-details">
+              <h4>Estado de Logística</h4>
+              <span class="logistic-tag">{{ selectedProductForTraceability.logisticStatus }}</span>
+            </div>
+          </div>
+
+          <div class="flow-step active" *ngIf="selectedPaymentTrace">
+            <div class="step-icon">💳</div>
+            <div class="step-details">
+              <h4>Pago y Liquidacion</h4>
+              <p><strong>Orden:</strong> {{ selectedPaymentTrace.orderCode }}</p>
+              <p><strong>Comprador:</strong> {{ selectedPaymentTrace.buyer }}</p>
+              <p><strong>Monto:</strong> Bs {{ selectedPaymentTrace.amount | number }}</p>
+              <span class="logistic-tag">{{ selectedPaymentTrace.currentStatus }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-payment-steps" *ngIf="selectedPaymentTrace">
+          <h4>Flujo de pago</h4>
+          <div class="mini-step" *ngFor="let step of selectedPaymentTrace.steps" [ngClass]="step.status.toLowerCase().replace(' ', '-')">
+            <span>{{ step.status }}</span>
+            <div>
+              <strong>{{ step.title }}</strong>
+              <p>{{ step.description }}</p>
+              <small>{{ step.date }} · {{ step.actor }}</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="traceability-footer">
+          <div class="qr-code-wrapper">
+            <div class="qr-code-box">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="currentColor">
+                <rect x="10" y="10" width="20" height="20"/>
+                <rect x="70" y="10" width="20" height="20"/>
+                <rect x="10" y="70" width="20" height="20"/>
+                <rect x="35" y="35" width="30" height="30"/>
+                <rect x="40" y="15" width="10" height="10"/>
+                <rect x="15" y="45" width="10" height="15"/>
+                <rect x="75" y="45" width="10" height="20"/>
+                <rect x="45" y="75" width="25" height="10"/>
+              </svg>
+            </div>
+            <div class="qr-info">
+              <span class="qr-title">Código QR Único (Trazabilidad)</span>
+              <span class="qr-text">{{ selectedProductForTraceability.qrCodeSimulated }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <app-button variant="primary" (btnClick)="closeTraceability()">Entendido / Cerrar</app-button>
+      </div>
+    </div>
+  </div>
+
+</div>

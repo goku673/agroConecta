@@ -1,0 +1,82 @@
+<header class="header-nav glass">
+  <div class="header-container container">
+    <div class="brand">
+      <div class="brand-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12c0 3.82 2.13 7.14 5.25 8.87.1.05.21.09.33.09.33 0 .6-.27.6-.6v-1.6c0-.55-.45-1-1-1h-.76C4.8 16.71 4 14.45 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8c0 2.45-.8 4.71-2.42 5.76H16.8c-.55 0-1 .45-1 1v1.6c0 .33.27.6.6.6.12 0 .23-.04.33-.09C19.87 19.14 22 15.82 22 12c0-5.52-4.48-10-10-10z"/>
+        </svg>
+      </div>
+      <span class="brand-name">Agro<span class="highlight">Conecta</span></span>
+    </div>
+
+    <nav class="nav-links">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">Inicio</a>
+      <a routerLink="/" fragment="catalog" class="nav-item">Catálogo</a>
+      <a routerLink="/" fragment="points" class="nav-item">Entregas</a>
+
+      <ng-container *ngIf="user?.role === 'productor'">
+        <a routerLink="/" fragment="producer-products" class="nav-item">Mis productos</a>
+        <a routerLink="/" fragment="offer" class="nav-item">Registrar producto</a>
+        <a routerLink="/" fragment="reservations" class="nav-item">Reservas</a>
+      </ng-container>
+
+      <ng-container *ngIf="user?.role === 'administrador'">
+        <a routerLink="/admin" fragment="resumen" routerLinkActive="active" class="nav-item">Panel admin</a>
+        <a routerLink="/admin" fragment="usuarios" class="nav-item">Usuarios</a>
+        <a routerLink="/admin" fragment="productos" class="nav-item">Productos</a>
+        <a routerLink="/admin" fragment="pagos" class="nav-item">Pagos</a>
+        <a routerLink="/admin" fragment="reservas" class="nav-item">Reservas</a>
+      </ng-container>
+    </nav>
+
+    <div class="header-actions">
+      <button type="button" class="btn-primary hover-lift glow-on-hover" *ngIf="!user" (click)="openLogin()">Iniciar sesión</button>
+
+      <div class="user-menu" *ngIf="user">
+        <div class="user-avatar">{{ userInitial }}</div>
+        <div class="user-info">
+          <strong>{{ user.name }}</strong>
+          <span>{{ user.role }}</span>
+        </div>
+        <button type="button" class="logout-link" (click)="logout()">Salir</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="login-backdrop" *ngIf="isLoginOpen">
+  <form class="login-modal" #loginForm="ngForm" (ngSubmit)="login()">
+    <div class="login-modal-head">
+      <div>
+        <span>Acceso mock</span>
+        <h2>Iniciar sesión</h2>
+      </div>
+      <button type="button" class="close-login" (click)="closeLogin()">×</button>
+    </div>
+
+    <label>
+      Entrar como
+      <select name="role" required [(ngModel)]="loginData.role">
+        <option value="productor">Productor</option>
+        <option value="administrador">Administrador</option>
+      </select>
+    </label>
+
+    <label>
+      Nombre
+      <input type="text" name="name" placeholder="Ej. Ana Productora" [(ngModel)]="loginData.name">
+    </label>
+
+    <label>
+      Email
+      <input type="email" name="email" placeholder="tu@email.com" [(ngModel)]="loginData.email">
+    </label>
+
+    <label>
+      Contraseña
+      <input type="password" name="password" placeholder="Cualquier dato" [(ngModel)]="loginData.password">
+    </label>
+
+    <button type="submit" class="login-submit">Entrar a la demo</button>
+  </form>
+</div>

@@ -1,0 +1,15 @@
+<div class="card" [class.premium-card]="variant === 'premium'">
+  <div class="card-glow" *ngIf="variant === 'premium'"></div>
+  <div class="card-content">
+    <div class="card-icon-wrapper">
+      <ng-content select="[card-icon]"></ng-content>
+    </div>
+    
+    <h3 class="card-title" *ngIf="title">{{ title }}</h3>
+    <p class="card-desc" *ngIf="description">{{ description }}</p>
+    
+    <div class="card-body">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>
