@@ -3,6 +3,7 @@ import { Product, DeliveryPoint, CartItem, DashboardStats, PaymentTrace } from '
 import { MOCK_PRODUCTS, MOCK_DELIVERY_POINTS, MOCK_PAYMENT_TRACES } from '../../data/agriculture.data';
 import { AgroApiService } from '../../services/agro-api.service';
 import { MockSessionUser, SessionService } from '../../../../core/services/session.service';
+import { TransactionDetailModalComponent } from '../../../../shared/components/transaction-detail-modal/transaction-detail-modal.component';
 
 @Component({
   selector: 'app-home',
@@ -24,6 +25,8 @@ export class HomeComponent implements OnInit {
   paymentTraces: PaymentTrace[] = [];
   currentUser: MockSessionUser | null = null;
   isLoadingProducts = false;
+  isDetailModalOpen = false;
+  selectedTransactionDetail: PaymentTrace | null = null;
   reservationData = {
     buyerName: '',
     phone: '',
@@ -250,6 +253,16 @@ export class HomeComponent implements OnInit {
   closeTraceability() {
     this.selectedProductForTraceability = null;
     this.selectedPaymentTrace = null;
+  }
+
+  openTransactionDetail(transaction: PaymentTrace) {
+    this.selectedTransactionDetail = transaction;
+    this.isDetailModalOpen = true;
+  }
+
+  closeTransactionDetail() {
+    this.isDetailModalOpen = false;
+    this.selectedTransactionDetail = null;
   }
 
   // HU-06: Registrar oferta diaria simulada
