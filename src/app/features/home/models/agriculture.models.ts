@@ -52,11 +52,22 @@ export interface PaymentTraceStep {
 export interface PaymentTrace {
   id: string;
   orderCode: string;
-  buyer: string;
+  buyerId: string;
+  buyerName: string;
+  buyerPhone?: string;
+  producerId: string;
   producer: string;
+  producerPhone?: string;
   product: string;
+  quantity: number;
+  unit: string;
   amount: number;
   method: string;
+  deliveryPointId: string;
+  deliveryPointName: string;
+  deliveryPointAddress: string;
   currentStatus: 'Pago confirmado' | 'En conciliacion' | 'Liquidado';
   steps: PaymentTraceStep[];
+  createdAt: string;
+  estimatedDelivery: string;
 }

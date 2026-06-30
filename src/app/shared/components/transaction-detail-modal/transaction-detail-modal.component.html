@@ -1,0 +1,103 @@
+<div *ngIf="isOpen && transaction" class="modal-overlay" (click)="close()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <!-- Header -->
+    <div class="modal-header">
+      <h2>Detalles de Transacción P2P</h2>
+      <button (click)="close()" class="close-btn">✕</button>
+    </div>
+
+    <!-- Transaction Summary -->
+    <div class="transaction-summary">
+      <div class="order-code">{{ transaction.orderCode }}</div>
+      <div class="status-badge" [style.background-color]="'#10b981'">
+        {{ transaction.currentStatus }}
+      </div>
+      <div class="amount-display">Bs. {{ transaction.amount | number: '1.0-0' }}</div>
+    </div>
+
+    <!-- P2P Connection -->
+    <div class="p2p-connection">
+      <div class="connection-section">
+        <div class="section-title">Productor</div>
+        <div class="producer-info">
+          <div class="name">{{ transaction.producer }}</div>
+          <div class="phone">📞 {{ transaction.producerPhone || 'N/A' }}</div>
+          <div class="role-badge">Vendedor Directo</div>
+        </div>
+      </div>
+
+      <div class="connection-arrow">
+        <div class="arrow-line">→</div>
+      </div>
+
+      <div class="connection-section">
+        <div class="section-title">Consumidor</div>
+        <div class="buyer-info">
+          <div class="name">{{ transaction.buyerName }}</div>
+          <div class="phone">📞 {{ transaction.buyerPhone || 'N/A' }}</div>
+          <div class="role-badge">Comprador Directo</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delivery Point -->
+    <div class="delivery-section">
+      <div class="section-title">📍 Punto de Entrega Estratégico</div>
+      <div class="delivery-info">
+        <div class="delivery-point-name">{{ transaction.deliveryPointName }}</div>
+        <div class="delivery-address">{{ transaction.deliveryPointAddress }}</div>
+        <div class="delivery-dates">
+          <span>Fecha pedido: {{ transaction.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+          <span>Entrega prevista: {{ transaction.estimatedDelivery | date: 'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Details -->
+    <div class="product-section">
+      <div class="section-title">📦 Detalles del Producto</div>
+      <div class="product-info">
+        <div class="product-name">{{ transaction.product }}</div>
+        <div class="product-quantity">
+          {{ transaction.quantity }} {{ transaction.unit }}
+        </div>
+        <div class="product-price">
+          Bs. {{ transaction.amount / transaction.quantity | number: '1.0-0' }} / {{ transaction.unit }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Method -->
+    <div class="payment-section">
+      <div class="section-title">💳 Método de Pago</div>
+      <div class="payment-method">{{ transaction.method }}</div>
+    </div>
+
+    <!-- Timeline Steps -->
+    <div class="timeline-section">
+      <div class="section-title">⏱ Cronograma de Transacción</div>
+      <div class="timeline">
+        <div *ngFor="let step of transaction.steps; let last = last" class="timeline-item">
+          <div class="timeline-marker" [style.background-color]="getStatusColor(step.status)">
+            {{ getStatusIcon(step.status) }}
+          </div>
+          <div class="timeline-content">
+            <div class="step-title">{{ step.title }}</div>
+            <div class="step-description">{{ step.description }}</div>
+            <div class="step-meta">
+              <span class="step-date">{{ step.date }}</span>
+              <span class="step-actor" *ngIf="step.actor">• {{ step.actor }}</span>
+              <span class="step-amount" *ngIf="step.amount">• Bs. {{ step.amount | number: '1.0-0' }}</span>
+            </div>
+          </div>
+          <div *ngIf="!last" class="timeline-line"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button (click)="close()" class="close-action-btn">Cerrar</button>
+    </div>
+  </div>
+</div>
