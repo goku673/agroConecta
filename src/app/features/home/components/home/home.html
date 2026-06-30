@@ -129,7 +129,7 @@
           <div class="producer-reservation-card" *ngFor="let trace of visibleReservations">
             <span class="payment-code">{{ trace.orderCode }}</span>
             <h4>{{ trace.product }}</h4>
-            <p>{{ trace.buyer }} · {{ trace.method }}</p>
+            <p>{{ trace.buyerName }} · {{ trace.method }}</p>
             <div>
               <strong>Bs {{ trace.amount | number }}</strong>
               <span class="role-pill">{{ trace.currentStatus }}</span>
@@ -440,7 +440,7 @@
           (click)="selectedPaymentTrace = trace">
           <span class="payment-code">{{ trace.orderCode }}</span>
           <strong>{{ trace.product }}</strong>
-          <span>{{ trace.buyer }} -> {{ trace.producer }}</span>
+          <span>{{ trace.buyerName }} -> {{ trace.producer }}</span>
           <small>{{ trace.method }} · Bs {{ trace.amount | number }}</small>
         </button>
       </div>
