@@ -3,7 +3,6 @@ import { Product, DeliveryPoint, CartItem, DashboardStats, PaymentTrace } from '
 import { MOCK_PRODUCTS, MOCK_DELIVERY_POINTS, MOCK_PAYMENT_TRACES } from '../../data/agriculture.data';
 import { AgroApiService } from '../../services/agro-api.service';
 import { MockSessionUser, SessionService } from '../../../../core/services/session.service';
-import { TransactionDetailModalComponent } from '../../../../shared/components/transaction-detail-modal/transaction-detail-modal.component';
 
 @Component({
   selector: 'app-home',
@@ -25,8 +24,6 @@ export class HomeComponent implements OnInit {
   paymentTraces: PaymentTrace[] = [];
   currentUser: MockSessionUser | null = null;
   isLoadingProducts = false;
-  isDetailModalOpen = false;
-  selectedTransactionDetail: PaymentTrace | null = null;
   reservationData = {
     buyerName: '',
     phone: '',
@@ -255,16 +252,6 @@ export class HomeComponent implements OnInit {
     this.selectedPaymentTrace = null;
   }
 
-  openTransactionDetail(transaction: PaymentTrace) {
-    this.selectedTransactionDetail = transaction;
-    this.isDetailModalOpen = true;
-  }
-
-  closeTransactionDetail() {
-    this.isDetailModalOpen = false;
-    this.selectedTransactionDetail = null;
-  }
-
   // HU-06: Registrar oferta diaria simulada
   registerOffer(form: any) {
     if (!this.isProducer) {
@@ -356,12 +343,23 @@ export class HomeComponent implements OnInit {
       {
         id: `pay-producer-${Date.now()}`,
         orderCode: `RES-${Date.now().toString().slice(-5)}`,
-        buyer: 'Cliente Feria Central',
+        buyerId: 'buyer-temp',
+        buyerName: 'Cliente Feria Central',
+        buyerPhone: '591-7-9999999',
+        producerId: `prod-${Date.now()}`,
         producer: producerName,
+        producerPhone: '591-7-8888888',
         product: 'Mix de verduras frescas',
+        quantity: 25,
+        unit: 'Kg',
         amount: 84000,
         method: 'Pago en punto de entrega',
+        deliveryPointId: 'pt-01',
+        deliveryPointName: 'Punto Entrega Central',
+        deliveryPointAddress: 'Centro Cochabamba',
         currentStatus: 'En conciliacion',
+        createdAt: new Date().toISOString(),
+        estimatedDelivery: new Date(Date.now() + 86400000).toISOString(),
         steps: [
           { title: 'Reserva recibida', description: 'Cliente reservo producto desde el catalogo.', date: 'Hoy 09:20', status: 'Completado', actor: 'Cliente' },
           { title: 'Pago en punto', description: 'El pago se confirma cuando el cliente retira.', date: 'Pendiente', status: 'Pendiente', amount: 84000, actor: 'Punto de entrega' },
@@ -414,12 +412,23 @@ export class HomeComponent implements OnInit {
     return {
       id: `pay-${Date.now()}`,
       orderCode,
-      buyer: this.reservationData.buyerName || 'Cliente en tienda',
+      buyerId: `buyer-${Date.now()}`,
+      buyerName: this.reservationData.buyerName || 'Cliente en tienda',
+      buyerPhone: '591-7-0000000',
+      producerId: `prod-${Date.now()}`,
       producer: producerSummary || firstItem.product.producer,
+      producerPhone: '591-7-1111111',
       product: productSummary,
+      quantity: this.cart.reduce((sum, item) => sum + item.quantity, 0),
+      unit: 'Kg',
       amount: total,
       method: this.reservationData.paymentMethod === 'qr' ? 'QR por la app' : 'Pago en punto de entrega',
+      deliveryPointId: this.selectedDeliveryPoint?.id || 'pt-01',
+      deliveryPointName: this.selectedDeliveryPoint?.name || 'Punto de entrega',
+      deliveryPointAddress: this.selectedDeliveryPoint?.address || 'Cochabamba',
       currentStatus: this.reservationData.paymentMethod === 'qr' ? 'Pago confirmado' : 'En conciliacion',
+      createdAt: new Date().toISOString(),
+      estimatedDelivery: this.reservationData.pickupDate || new Date(Date.now() + 86400000).toISOString(),
       steps: [
         { title: 'Reserva generada', description: 'El stock queda apartado para el comprador.', date: 'Ahora', status: 'Completado', actor: this.reservationData.buyerName || 'Cliente' },
         {
@@ -442,12 +451,23 @@ export class HomeComponent implements OnInit {
     return {
       id: `pending-${product.id}`,
       orderCode: product.batchCode || product.qrCodeSimulated,
-      buyer: 'Sin comprador asignado',
+      buyerId: 'buyer-pending',
+      buyerName: 'Sin comprador asignado',
+      buyerPhone: '',
+      producerId: `prod-${product.id}`,
       producer: product.producer,
+      producerPhone: '591-7-2222222',
       product: product.name,
+      quantity: product.stock || 0,
+      unit: product.unit || 'Kg',
       amount: product.price,
       method: 'Pendiente',
+      deliveryPointId: 'pt-01',
+      deliveryPointName: 'Punto de entrega',
+      deliveryPointAddress: 'Cochabamba',
       currentStatus: 'En conciliacion',
+      createdAt: new Date().toISOString(),
+      estimatedDelivery: new Date(Date.now() + 86400000).toISOString(),
       steps: [
         { title: 'Lote publicado', description: 'El productor registro la oferta para venta.', date: product.harvestDate, status: 'Completado', actor: product.producer },
         { title: 'Pedido pendiente', description: 'Aun no existe una compra confirmada para este lote.', date: 'Pendiente', status: 'Pendiente', actor: 'Comprador' },

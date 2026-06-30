@@ -93,7 +93,7 @@
           <div class="payment-admin-row" *ngFor="let trace of paymentTraces">
             <div>
               <strong>{{ trace.orderCode }}</strong>
-              <span>{{ trace.buyer }} -> {{ trace.producer }}</span>
+              <span>{{ trace.buyerName }} -> {{ trace.producer }}</span>
             </div>
             <span class="role-pill">{{ trace.currentStatus }}</span>
             <strong>Bs {{ trace.amount | number }}</strong>
@@ -249,7 +249,7 @@
             <strong>{{ trace.currentStatus }}</strong>
           </div>
           <h3>{{ trace.product }}</h3>
-          <p>Cliente: <strong>{{ trace.buyer }}</strong></p>
+          <p>Cliente: <strong>{{ trace.buyerName }}</strong></p>
           <p>Productor: <strong>{{ trace.producer }}</strong></p>
           <div class="reservation-admin-footer">
             <span>{{ trace.method }}</span>
