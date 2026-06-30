@@ -1,0 +1,273 @@
+<section class="admin-page container">
+  <div class="admin-hero">
+    <div>
+      <span class="admin-kicker">Panel administrativo mock</span>
+      <h1>Operación de AgroConecta</h1>
+      <p>Gestiona usuarios, productores, productos, pagos y liquidaciones sin backend. Los formularios aceptan cualquier dato para probar el flujo completo del front.</p>
+    </div>
+
+    <button class="logout-btn" (click)="logout()">Cerrar sesion mock</button>
+  </div>
+
+  <div class="admin-message" *ngIf="message" [ngClass]="messageType">
+    {{ message }}
+  </div>
+
+  <form class="login-card" #loginForm="ngForm" (ngSubmit)="loginAdmin()">
+    <h2>Ingreso rapido</h2>
+    <p>Escribe cualquier email y clave para actualizar el usuario de la sesion demo.</p>
+
+    <div class="login-row">
+      <label>
+        Email
+        <input type="email" name="email" required [(ngModel)]="loginData.email">
+      </label>
+
+      <label>
+        Password
+        <input type="password" name="password" required [(ngModel)]="loginData.password">
+      </label>
+
+      <button type="submit" [disabled]="loginForm.invalid || isLoading">
+        {{ isLoading ? 'Ingresando...' : 'Entrar' }}
+      </button>
+    </div>
+  </form>
+
+  <div class="admin-tabs">
+    <button type="button" [class.active]="activeTab === 'resumen'" (click)="setTab('resumen')">Resumen</button>
+    <button type="button" [class.active]="activeTab === 'usuarios'" (click)="setTab('usuarios')">Usuarios</button>
+    <button type="button" [class.active]="activeTab === 'productos'" (click)="setTab('productos')">Productos</button>
+    <button type="button" [class.active]="activeTab === 'pagos'" (click)="setTab('pagos')">Pagos</button>
+    <button type="button" [class.active]="activeTab === 'reservas'" (click)="setTab('reservas')">Reservas</button>
+    <button type="button" [class.active]="activeTab === 'perfil'" (click)="setTab('perfil')">Perfil</button>
+  </div>
+
+  <div class="admin-summary">
+    <div class="summary-card">
+      <span>{{ users.length }}</span>
+      <p>Usuarios registrados</p>
+    </div>
+    <div class="summary-card">
+      <span>{{ activeUsersCount }}</span>
+      <p>Usuarios activos</p>
+    </div>
+    <div class="summary-card">
+      <span>{{ products.length }}</span>
+      <p>Productos activos</p>
+    </div>
+    <div class="summary-card">
+      <span>{{ pendingPaymentsCount }}</span>
+      <p>Pagos por cerrar</p>
+    </div>
+  </div>
+
+  <div id="resumen" class="admin-content" *ngIf="activeTab === 'resumen'">
+    <div class="admin-grid">
+      <div class="admin-card">
+        <h2>Movimiento semanal</h2>
+        <p class="card-copy">Pedidos simulados por dia.</p>
+        <div class="bar-chart">
+          <div class="bar-item" *ngFor="let bar of chartBars">
+            <div class="bar-track"><span [style.height.%]="bar.value"></span></div>
+            <strong>{{ bar.label }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <h2>Distribucion de roles</h2>
+        <p class="card-copy">Composición mock de la comunidad.</p>
+        <div class="role-chart">
+          <div class="role-row" *ngFor="let role of roleStats">
+            <span>{{ role.label }}</span>
+            <div class="role-track"><i [style.width.%]="role.value" [style.background]="role.color"></i></div>
+            <strong>{{ role.value }}%</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-card wide">
+        <h2>Pagos recientes</h2>
+        <div class="payment-admin-list">
+          <div class="payment-admin-row" *ngFor="let trace of paymentTraces">
+            <div>
+              <strong>{{ trace.orderCode }}</strong>
+              <span>{{ trace.buyer }} -> {{ trace.producer }}</span>
+            </div>
+            <span class="role-pill">{{ trace.currentStatus }}</span>
+            <strong>Bs {{ trace.amount | number }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="usuarios" class="admin-content" *ngIf="activeTab === 'usuarios'">
+    <div class="admin-grid">
+      <div class="admin-card wide">
+        <h2>Usuarios</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Rol</th>
+                <th>Estado</th>
+                <th>Alta</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of users">
+                <td>{{ user.full_name }}</td>
+                <td>{{ user.email }}</td>
+                <td><span class="role-pill">{{ user.role }}</span></td>
+                <td>{{ user.is_active ? 'Activo' : 'Inactivo' }}</td>
+                <td>{{ user.created_at }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <h2>Personas y productores</h2>
+        <div class="list">
+          <div class="list-item" *ngFor="let person of people">
+            <strong>{{ person.full_name || 'Persona sin usuario' }}</strong>
+            <span>{{ person.person_type }} · {{ person.city || 'Sin ciudad' }}</span>
+            <small>{{ person.phone || 'Sin telefono' }} · {{ person.address || 'Sin direccion' }}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="productos" class="admin-content" *ngIf="activeTab === 'productos'">
+    <div class="admin-grid">
+      <form class="admin-card product-form" #productForm="ngForm" (ngSubmit)="createProduct(productForm)">
+        <h2>Registrar producto</h2>
+
+        <label>
+          Nombre
+          <input type="text" name="name" required minlength="2" [(ngModel)]="newProduct.name">
+        </label>
+
+        <label>
+          Descripcion
+          <textarea name="description" rows="3" [(ngModel)]="newProduct.description"></textarea>
+        </label>
+
+        <div class="form-row">
+          <label>
+            Categoria
+            <select name="categoryId" required [(ngModel)]="newProduct.categoryId">
+              <option [ngValue]="1">Hortalizas</option>
+              <option [ngValue]="2">Frutas</option>
+              <option [ngValue]="3">Granos</option>
+              <option [ngValue]="4">Insumos</option>
+            </select>
+          </label>
+
+          <label>
+            Unidad
+            <input type="text" name="unit" required [(ngModel)]="newProduct.unit">
+          </label>
+        </div>
+
+        <div class="form-row">
+          <label>
+            Precio
+            <input type="number" name="price" required min="0" [(ngModel)]="newProduct.price">
+          </label>
+
+          <label>
+            Stock
+            <input type="number" name="stock" required min="0" [(ngModel)]="newProduct.stock">
+          </label>
+        </div>
+
+        <label>
+          Ciudad de origen
+          <input type="text" name="originCity" required [(ngModel)]="newProduct.originCity">
+        </label>
+
+        <button type="submit" [disabled]="productForm.invalid || isLoading">
+          {{ isLoading ? 'Guardando...' : 'Guardar producto mock' }}
+        </button>
+      </form>
+
+      <div class="admin-card">
+        <h2>Productos publicados</h2>
+        <div class="list products-list">
+          <div class="list-item product-row" *ngFor="let product of products">
+            <img *ngIf="product.imageUrl" [src]="product.imageUrl" [alt]="product.name">
+            <div>
+              <strong>{{ product.name }}</strong>
+              <span>{{ product.category }} · Bs {{ product.price | number }} / {{ product.unit }}</span>
+              <small>Stock: {{ product.stock }} · {{ product.origin }}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="pagos" class="admin-content" *ngIf="activeTab === 'pagos'">
+    <div class="admin-card wide">
+      <h2>Trazabilidad de pagos</h2>
+      <div class="admin-payment-flow" *ngFor="let trace of paymentTraces">
+        <div class="admin-payment-head">
+          <div>
+            <strong>{{ trace.orderCode }}</strong>
+            <span>{{ trace.product }}</span>
+          </div>
+          <span class="role-pill">{{ trace.currentStatus }}</span>
+          <strong>Bs {{ trace.amount | number }}</strong>
+        </div>
+        <div class="admin-payment-steps">
+          <div class="admin-payment-step" *ngFor="let step of trace.steps">
+            <span>{{ step.status }}</span>
+            <div>
+              <strong>{{ step.title }}</strong>
+              <small>{{ step.date }} · {{ step.actor }}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="reservas" class="admin-content" *ngIf="activeTab === 'reservas'">
+    <div class="admin-card wide">
+      <h2>Reservas activas</h2>
+      <div class="reservation-admin-grid">
+        <div class="reservation-admin-card" *ngFor="let trace of paymentTraces">
+          <div class="reservation-admin-head">
+            <span>{{ trace.orderCode }}</span>
+            <strong>{{ trace.currentStatus }}</strong>
+          </div>
+          <h3>{{ trace.product }}</h3>
+          <p>Cliente: <strong>{{ trace.buyer }}</strong></p>
+          <p>Productor: <strong>{{ trace.producer }}</strong></p>
+          <div class="reservation-admin-footer">
+            <span>{{ trace.method }}</span>
+            <strong>Bs {{ trace.amount | number }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="perfil" class="admin-content" *ngIf="activeTab === 'perfil'">
+    <div class="profile-card admin-card">
+      <div class="profile-avatar">{{ currentUser?.full_name?.charAt(0) || 'A' }}</div>
+      <div>
+        <h2>{{ currentUser?.full_name || 'Administrador Demo' }}</h2>
+        <p>{{ currentUser?.email }}</p>
+        <span class="role-pill">{{ currentUser?.role }}</span>
+      </div>
+    </div>
+  </div>
+</section>

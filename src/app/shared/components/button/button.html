@@ -1,0 +1,11 @@
+<button 
+  [type]="type"
+  [disabled]="disabled"
+  [class]="'btn ' + variant"
+  (click)="onClick($event)">
+  <ng-content select="[btn-icon-start]"></ng-content>
+  <span class="btn-label">
+    <ng-content></ng-content>
+  </span>
+  <ng-content select="[btn-icon-end]"></ng-content>
+</button>
